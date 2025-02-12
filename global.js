@@ -1,7 +1,7 @@
 const pages = [
     { url: '', title: 'Home' },
-    { url: 'activity/', title: 'Activity' },
-    { url: 'temp/', title: 'Temperature' },
+    { url: '../activity/', title: 'Activity' },
+    { url: '../temp/', title: 'Temperature' },
   ];
   // Check if we're on the home page
 const ARE_WE_HOME = document.documentElement.classList.contains('home');
