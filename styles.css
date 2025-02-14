@@ -1,6 +1,6 @@
 :root{
     --color-accent: oklch(20% 60% 0);
-    color-scheme: light dark;
+    color-scheme: light;
   }
   form input, form textarea, form button {
     font: inherit;
@@ -65,3 +65,35 @@ body {
 
     }
   }
+
+/* Activity */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.title {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.heatmap-container {
+    margin: 20px 0;
+}
+
+.tooltip {
+    position: absolute;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 4px;
+    font-size: 12px;
+    pointer-events: none;
+}
+
+.axis-label {
+    font-size: 12px;
+}
