@@ -12,8 +12,8 @@ const config = {
 // Create SVG
 const svg = d3.select("#heatmap")
     .append("svg")
-    .attr("width", config.width)
-    .attr("height", config.height * 1.2); //idk why the 1.2 is needed
+    .attr("width", config.width + 100) // Increased width to accommodate legend
+    .attr("height", config.height * 1.2); // Increased height to accommodate legend and slider
 
 // Create tooltip
 const tooltip = d3.select("body")
@@ -21,6 +21,13 @@ const tooltip = d3.select("body")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
+    // Create filter range text
+const filterRangeText = svg.append("text")
+    .attr("x", config.width / 2)
+    .attr("y", config.margin.top +430)
+    .attr("text-anchor", "middle")
+    .style("font-size", "16px")
+    .text("Filter Range: All");
 // Calculate dimensions for each heatmap
 const heatmapHeight = (config.height - config.margin.top - config.margin.bottom) / 2;
 const heatmapWidth = config.width - config.margin.left - config.margin.right;
@@ -78,8 +85,19 @@ function processCSVData(csvData) {
 }
 
 // Function to create a single heatmap
-function createHeatmap(data, title, yPos) {
+function createHeatmap(data, title, yPos, filterRange) {
+    
+    const filteredData = data.filter(d => d.value <= filterRange[0] && d.value >= filterRange[1]);
+
+    // Remove existing heatmap group if it exists
+    const heatmapClass = `heatmap-${title.replace(/\s+/g, '-')}`;
+    const existingGroup = svg.selectAll(`.${heatmapClass}`);
+    if (!existingGroup.empty()) {
+        existingGroup.remove();
+    }
+
     const group = svg.append("g")
+        .attr("class", `heatmap ${heatmapClass}`)
         .attr("transform", `translate(${config.margin.left}, ${yPos})`);
 
     // Add title
@@ -106,7 +124,7 @@ function createHeatmap(data, title, yPos) {
 
     // Add heatmap cells
     group.selectAll(".cell")
-        .data(data)
+        .data(filteredData)
         .enter()
         .append("rect")
         .attr("class", "cell")
@@ -166,14 +184,30 @@ function createHeatmap(data, title, yPos) {
         .text("Day");
 }
 
+// Function to update heatmaps based on filter range
+function updateHeatmaps(filterRange) {
+    if (filterRange === null) {
+        // Reset to full range
+        const allValues = [...femaleProcessed, ...maleProcessed].map(d => d.value);
+        const minValue = d3.min(allValues);
+        const maxValue = d3.max(allValues);
+        filterRange = [maxValue, minValue];
+    }
+    createHeatmap(femaleProcessed, "Female Activity", config.margin.top, filterRange);
+    createHeatmap(maleProcessed, "Male Activity", config.margin.top + heatmapHeight + 150, filterRange);
+    filterRangeText.text(`Filter Range: ${filterRange[1].toFixed(2)} - ${filterRange[0].toFixed(2)}`);
+}
+
+
+
 // Load and process data
 Promise.all([
     d3.csv("../data/FemAct.csv"),
     d3.csv("../data/MaleAct.csv")
 ]).then(([femData, maleData]) => {
     // Process the data
-    const femaleProcessed = processCSVData(femData);
-    const maleProcessed = processCSVData(maleData);
+    femaleProcessed = processCSVData(femData);
+    maleProcessed = processCSVData(maleData);
     
     // Update color scale domain based on actual data ranges
     const allValues = [...femaleProcessed, ...maleProcessed].map(d => d.value);
@@ -182,8 +216,71 @@ Promise.all([
     colorScale.domain([minValue, maxValue]);
     
     // Create heatmaps
-    createHeatmap(femaleProcessed, "Female Activity", config.margin.top);
-    createHeatmap(maleProcessed, "Male Activity", config.margin.top + heatmapHeight + 150);
+    createHeatmap(femaleProcessed, "Female Activity", config.margin.top, [maxValue, minValue]);
+    createHeatmap(maleProcessed, "Male Activity", config.margin.top + heatmapHeight + 150, [maxValue, minValue]);
+    
+    // Create legend
+    createLegend(minValue, maxValue);
 }).catch(error => {
     console.error("Error loading the data:", error);
+});
+
+// Function to create legend
+// Function to create legend
+function createLegend(minValue, maxValue) {
+    const legendHeight = 800;
+    const legendWidth = 20;
+
+    const legendSvg = svg.append("g")
+        .attr("class", "legend")
+        .attr("transform", `translate(${config.width + 50}, ${config.margin.top})`);
+
+    const gradient = legendSvg.append("defs")
+        .append("linearGradient")
+        .attr("id", "legendGradient")
+        .attr("x1", "0%")
+        .attr("y1", "100%")
+        .attr("x2", "0%")
+        .attr("y2", "0%");
+
+    // Use the same color scale for the legend
+    gradient.selectAll("stop")
+        .data(d3.range(0, 1.01, 0.01))
+        .enter()
+        .append("stop")
+        .attr("offset", d => `${d * 100}%`)
+        .attr("stop-color", d => colorScale(d * (maxValue - minValue) + minValue));
+
+    legendSvg.append("rect")
+        .attr("width", legendWidth)
+        .attr("height", legendHeight)
+        .style("fill", "url(#legendGradient)");
+
+    const legendScale = d3.scaleLinear()
+        .domain([minValue, maxValue])
+        .range([legendHeight, 0]);
+
+    const legendAxis = d3.axisRight(legendScale)
+        .ticks(5);
+
+    legendSvg.append("g")
+        .attr("transform", `translate(${legendWidth}, 0)`)
+        .call(legendAxis);
+
+    // Add brush for interactive legend
+    const brush = d3.brushY()
+        .extent([[0, 0], [legendWidth, legendHeight]])
+        .on("brush end", function(event) {
+            const selection = event.selection || [0, legendHeight];
+            const selectedRange = selection.map(legendScale.invert);
+            updateHeatmaps(selectedRange);
+        });
+
+    legendSvg.append("g")
+        .attr("class", "brush")
+        .call(brush);
+}
+// Add event listener to the "Reset Filter" button
+document.getElementById("reset-filter").addEventListener("click", function() {
+    updateHeatmaps(null);
 });

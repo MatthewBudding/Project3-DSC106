@@ -1,6 +1,9 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    
     <title>Mouse Activity Heatmap</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
     <link rel="stylesheet" href="../styles.css">
     <title>Activity</title>
@@ -9,7 +12,9 @@
     <div class="container">
         <div class="title"><h1>Activity Comparison</h1></div>
         <div id="heatmap"></div>
+        <button id="reset-filter">Reset Filter</button>
     </div>
+    
     <script type="module" src="../global.js"></script>
     <script src="activity.js"></script>
 </body>
