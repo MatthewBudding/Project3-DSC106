@@ -8,8 +8,38 @@
 </head>
 <body>
     <h1>Rat Trap</h1>
-   <h2> Members: Matthew Budding, Eric Cheng, Omid Alamdar, Jerric Jiang</h2>
+    <h2> Members: Matthew Budding, Eric Cheng, Omid Alamdar, Jerric Jiang</h2>
 
+    <h3>Write Up:</h3>
+    <div class = "writeup">
+        Our project set out to explore how male and female mice differ in both temperature and activity levels over the course of a day.
+         To do this, we chose heatmaps as our central visualization tool because they let us pack an entire day-by-day, hour-by-hour 
+         story into a single, easy-to-read chart. We plotted days on the vertical axis and hours on the horizontal axis, then used 
+         color to signal the intensity of either temperature or activity. For the activity heatmaps, we opted for a purple–green–yellow 
+         range so that high activity levels pop out in bright yellow, while calm or resting periods remain in cool purples. 
+         For temperature, we wanted to preserve a sense of warmth in higher readings, so we shifted to a more classic blue–green–yellow 
+         gradient.<br>
+        Alongside color choices, we emphasized interactivity. Hover tooltips, for instance, give a precise value for each day-hour cell,
+         helping viewers drill down beyond the overall trends. We also considered adding a filter so that users could zoom in on specific
+         date ranges, though our demo defaults to displaying all available days. We weighed other chart types—like line charts or grouped
+         bar charts—but ultimately, those would have lost the granularity that heatmaps retain so well.	<br>
+        Our collaboration relied on dividing tasks among team members. One person cleaned and organized the mouse data, making sure the
+         timestamps and values aligned properly across days, which took around eight person-hours. 
+         Two members spent roughly twelve person-hours building the visualizations—fine-tuning colors, adding hover elements, and 
+         experimenting with small design touches—then used another six hours to polish labels, legends, and other interface details. 
+         My role was to write this narrative, drawing together all the design choices and findings, which took about two to three hours. <br>
+        The final heatmaps highlight interesting differences between male and female mice. Both groups exhibit somewhat consistent 
+         circadian rhythms, with elevated activity in the early and late hours of the day. However, we see that female mice typically
+         maintain higher or more stable temperatures, especially in the morning, whereas males experience more pronounced dips or 
+         fluctuations in the afternoon and evening. The data also suggests that while both sexes have activity spikes, these bursts can
+         appear at different times or intensities from day to day. By blending color-coding, time axes, and interactivity, we’ve 
+         created a clear, comprehensive visual tool for comparing these daily fluctuations in temperature and activity. Ultimately,
+         this design provides a straightforward way to spot patterns and glean insights from a complex dataset—precisely what we set 
+         out to do when we first formulated our research question.
+
+
+
+    </div>
     <script src="global.js"></script>
 </body>
 </html>
