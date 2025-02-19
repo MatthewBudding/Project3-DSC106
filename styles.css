@@ -66,36 +66,129 @@ body {
     }
   }
 
-/* Activity */
+
+/* Container styles */
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  margin: 1em;
+  font-family: Arial, sans-serif;
 }
 
+/* Title styles */
 .title {
-    font-size: 24px;
-    margin-bottom: 20px;
+  width: 100%;
+  text-align: left;
 }
 
-.heatmap-container {
-    margin: 20px 0;
+
+/* Controls container */
+.controls {
+  display: flex;
+  gap: 1em;
+  margin-bottom: 2em;
+  align-items: right;
+}
+
+#metric-toggle {
+  padding: 0.5em 1em;
+  font-size: 1em;
+  border: 2px solid #e2e8f0;
+  border-radius: 6px;
+  margin: 0.5em;
+  background-color: white;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+#metric-toggle:hover {
+  border-color: #cbd5e0;
+}
+#metric-toggle:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+}
+
+/* Reset button styles */
+#reset-filter {
+  padding: 0.5em 1.2em;
+  font-size: 1em;
+  color: #fff;
+  background-color: #1f1f1f;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+#reset-filter:hover {
+  background-color: #444444;
+}
+#reset-filter:active {
+  background-color: #b3b3b3;
 }
 
 .tooltip {
-    position: absolute;
-    padding: 8px;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    border-radius: 4px;
-    font-size: 12px;
-    pointer-events: none;
+  position: absolute;
+  padding: 0.75em 1em;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border-radius: 4px;
+  font-size: 0.875em;
+  pointer-events: none;
+  white-space: nowrap;
 }
 
 .axis-label {
     font-size: 12px;
+}
+
+/* Legend styles */
+.legend-background {
+  transition: stroke 0.2s ease;
+}
+.legend-background:hover {
+  stroke: #cbd5e0;
+}
+.legend-handle {
+  transition: fill 0.2s ease;
+  cursor: ns-resize;
+}
+.legend-handle:hover {
+  fill: #cbd5e0;
+}
+.brush .selection {
+  cursor: grab;
+}
+.brush .selection:active {
+  cursor: grabbing;
+}
+.brush .handle {
+  cursor: ns-resize;
+}
+
+/* Enhance the axis appearance */
+.legend-axis path,
+.legend-axis line {
+  stroke: #a0aec0;
+}
+.legend-axis text {
+  fill: #4a5568;
+  font-size: 12px;
+}
+
+/* Legend title styling */
+.legend-title {
+  font-family: 'Inter', Arial, sans-serif;
+  font-weight: 500;
+}
+
+/* Add animation to brush interaction */
+.brush .selection,
+.brush .handle {
+  transition: stroke 0.2s ease, fill 0.2s ease;
 }
 
 .writeup {
@@ -122,17 +215,19 @@ body {
   margin-bottom: 15px; 
 }
 
-h1 {
-  text-align: center; 
-  font-size: 36px; 
-  margin-top: 20px; 
-  margin-bottom: 20px; 
-  font-weight: bold; 
+@media (max-width: 1440px) {
+  .container {
+      margin: 1em;
+      padding: 1.5em;
+  }
 }
-h2 {
-  text-align: center; 
-  font-size: 24px; 
-  margin-top: 20px; 
-  margin-bottom: 20px; 
-  font-weight: bold;
+
+@media (max-width: 768px) {
+  .container {
+      padding: 1em;
+  }
+  
+  .title h1 {
+      font-size: 1.8em;
+  }
 }

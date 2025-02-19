@@ -130,25 +130,60 @@ function createHeatmap(data, title, yPos, filterRange) {
         .data(filteredData)
         .enter()
         .append("rect")
-        .attr("class", "cell")
+        .attr("class", d => `cell cell-${title.includes("Female") ? "Female" : "Male"}`)
         .attr("x", d => xScale(d.interval))
         .attr("y", d => yScale(d.day))
         .attr("width", cellWidth)
         .attr("height", cellHeight)
         .attr("fill", d => colorScales[metric](d.value))
         .on("mouseover", function(event, d) {
+            const otherGender = title.includes("Female") ? "Male" : "Female";
+        
+            // Find the corresponding value in the other heatmap
+            const otherValue = processedData[currentMetric][otherGender.toLowerCase()]
+                .find(e => e.day === d.day && e.interval === d.interval)?.value || 0;
+            
+            const difference = d.value - otherValue; // Compute difference
+        
+            // Highlight both the hovered and corresponding cell
+            d3.select(this)
+                .attr("stroke", "white")
+                .attr("stroke-width", 2);
+        
+            d3.selectAll(`.cell-${otherGender}`)
+                .filter(e => e.day === d.day && e.interval === d.interval)
+                .attr("stroke", "white")
+                .attr("stroke-width", 2);
+        
+            // Show tooltip with the difference included
             tooltip.transition()
                 .duration(200)
-                .style("opacity", .9);
+                .style("opacity", 0.9);
             tooltip.html(
                 `Day: ${d.day + 1}<br>` +
                 `Time: ${formatTime(d.interval)}<br>` +
-                `${tooltipLabel}: ${d.value.toFixed(2)}`
+                `${tooltipLabel}: ${d.value.toFixed(2)}<br>` +
+                `-----<br>` +  // Separator line
+                `Difference: ${difference.toFixed(2)}`
             )
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 28) + "px");
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 28) + "px");
+        
+            // Store the other gender's corresponding cell data
+            d3.select(this).attr("data-other-gender", otherGender);
         })
-        .on("mouseout", function() {
+        .on("mouseout", function(event, d) {
+            const otherGender = d3.select(this).attr("data-other-gender"); // Retrieve stored gender
+        
+            // Remove highlight from both elements
+            d3.select(this)
+                .attr("stroke", "none");
+        
+            d3.selectAll(`.cell-${otherGender}`)
+                .filter(e => e.day === d.day && e.interval === d.interval)
+                .attr("stroke", "none");
+        
+            // Hide tooltip
             tooltip.transition()
                 .duration(500)
                 .style("opacity", 0);
@@ -214,7 +249,41 @@ function createLegend(minValue, maxValue) {
 
     const legendSvg = svg.append("g")
         .attr("class", "legend")
-        .attr("transform", `translate(${config.width + 50}, ${config.margin.top})`);
+        .attr("transform", `translate(${config.width + 30}, ${config.margin.top})`);
+
+    // Add instruction text
+    legendSvg.append("text")
+        .attr("class", "legend-title")
+        .attr("x", legendWidth / 2)
+        .attr("y", -25)
+        .attr("text-anchor", "middle")
+        .attr("fill", "#4a5568")
+        .attr("font-size", "14px")
+        .text("Drag to Filter");
+
+    // Add visual handles at top and bottom
+    const handleHeight = 10;
+    const handleWidth = legendWidth + 10;
+    
+    // Top handle
+    legendSvg.append("rect")
+        .attr("class", "legend-handle")
+        .attr("x", -5)
+        .attr("y", -5)
+        .attr("width", handleWidth)
+        .attr("height", handleHeight)
+        .attr("fill", "#e2e8f0")
+        .attr("rx", 3);
+
+    // Bottom handle
+    legendSvg.append("rect")
+        .attr("class", "legend-handle")
+        .attr("x", -5)
+        .attr("y", legendHeight - 5)
+        .attr("width", handleWidth)
+        .attr("height", handleHeight)
+        .attr("fill", "#e2e8f0")
+        .attr("rx", 3);
 
     const gradient = legendSvg.append("defs")
         .append("linearGradient")
@@ -245,6 +314,7 @@ function createLegend(minValue, maxValue) {
 
     legendSvg.append("g")
         .attr("transform", `translate(${legendWidth}, 0)`)
+        .attr("class", "legend-axis")
         .call(legendAxis);
 
     const brush = d3.brushY()
@@ -255,9 +325,20 @@ function createLegend(minValue, maxValue) {
             updateHeatmaps(selectedRange);
         });
 
-    legendSvg.append("g")
+    const brushGroup = legendSvg.append("g")
         .attr("class", "brush")
         .call(brush);
+
+    // Add CSS class for custom styling
+    brushGroup.select(".selection")
+        .attr("fill", "rgba(66, 153, 225, 0.15)")
+        .attr("stroke", "#4299e1")
+        .attr("stroke-width", "2px");
+
+    // Add resize handles styling
+    brushGroup.selectAll(".handle")
+        .attr("fill", "#4299e1")
+        .attr("stroke", "#2b6cb0");
 }
 
 function switchMetric(metric) {
@@ -279,10 +360,10 @@ function switchMetric(metric) {
 
 // Load all data at startup
 Promise.all([
-    d3.csv("../data/FemAct.csv"),
-    d3.csv("../data/MaleAct.csv"),
-    d3.csv("../data/FemTemp.csv"),
-    d3.csv("../data/MaleTemp.csv")
+    d3.csv("data/FemAct.csv"),
+    d3.csv("data/MaleAct.csv"),
+    d3.csv("data/FemTemp.csv"),
+    d3.csv("data/MaleTemp.csv")
 ]).then(([femAct, maleAct, femTemp, maleTemp]) => {
     // Process all data
     processedData.activity.female = processCSVData(femAct);

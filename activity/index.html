@@ -11,8 +11,13 @@
 <body>
     <div class="container">
         <div class="title"><h1>Activity Comparison</h1></div>
+        <select id="metric-toggle">
+            <option value="activity">Activity</option>
+            <option value="temperature">Temperature</option>
+        </select>
         <div id="heatmap"></div>
         <button id="reset-filter">Reset Filter</button>
+        
     </div>
     
     <script type="module" src="../global.js"></script>
