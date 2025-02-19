@@ -36,33 +36,29 @@
         Our project set out to explore how male and female mice differ in both temperature and activity levels over the course of a day.
          To do this, we chose heatmaps as our central visualization tool because they let us pack an entire day-by-day, hour-by-hour 
          story into a single, easy-to-read chart. We plotted days on the vertical axis and hours on the horizontal axis, then used 
-         color to signal the intensity of either temperature or activity. For the activity heatmaps, we opted for a purple–green–yellow 
+         color to signal the intensity of either temperature or activity. For the activity heatmaps, we opted for a purple-green-yellow 
          range so that high activity levels pop out in bright yellow, while calm or resting periods remain in cool purples. 
-         For temperature, we wanted to preserve a sense of warmth in higher readings, so we shifted to a more classic blue–green–yellow 
+         For temperature, we wanted to preserve a sense of warmth in higher readings, so we shifted to a more classic black-red-yellow 
          gradient.
         </p>
         <p>
         Alongside color choices, we emphasized interactivity. Hover tooltips, for instance, give a precise value for each day-hour cell,
-         helping viewers drill down beyond the overall trends. We also considered adding a filter so that users could zoom in on specific
-         date ranges, though our demo defaults to displaying all available days. We weighed other chart types—like line charts or grouped
-         bar charts—but ultimately, those would have lost the granularity that heatmaps retain so well.	
+         helping viewers drill down beyond the overall trends. Those tooltips also highlight corresponding cells in the other sex's 
+         heatmap, while showing the difference between the two values. The user could also filter by a range of values by brushing over 
+         the legend.
         </p>
         <p>
         Our collaboration relied on dividing tasks among team members. One person cleaned and organized the mouse data, making sure the
-         timestamps and values aligned properly across days, which took around eight person-hours. 
-         Two members spent roughly twelve person-hours building the visualizations—fine-tuning colors, adding hover elements, and 
-         experimenting with small design touches—then used another six hours to polish labels, legends, and other interface details. 
+         timestamps and values aligned properly across days, which took around 5 hours. 
+         Two members spent roughly 10 person-hours building the two visualizations—fine-tuning colors, adding hover elements, and 
+         experimenting with small design touches—then used another 4 hours to polish labels, legends, and other interface details. 
          My role was to write this narrative, drawing together all the design choices and findings, which took about two to three hours. 
         </p>
         <p>
         The final heatmaps highlight interesting differences between male and female mice. Both groups exhibit somewhat consistent 
-         circadian rhythms, with elevated activity in the early and late hours of the day. However, we see that female mice typically
-         maintain higher or more stable temperatures, especially in the morning, whereas males experience more pronounced dips or 
-         fluctuations in the afternoon and evening. The data also suggests that while both sexes have activity spikes, these bursts can
-         appear at different times or intensities from day to day. By blending color-coding, time axes, and interactivity, we’ve 
-         created a clear, comprehensive visual tool for comparing these daily fluctuations in temperature and activity. Ultimately,
-         this design provides a straightforward way to spot patterns and glean insights from a complex dataset—precisely what we set 
-         out to do when we first formulated our research question.
+         circadian rhythms, with elevated activity prior to the twelth hour. However, female mice showed sharp spikes in 
+         both activity and temperature in days 2, 6, 10, and 14, corresponding to their estrus period. Other insights from this show 
+         that males tend to exhibit more activity than female mice (except during estrus), but female mice consistently have higher tempereratures.
          </p>
     </div>
 </body>
