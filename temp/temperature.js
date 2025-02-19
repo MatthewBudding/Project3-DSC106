@@ -41,7 +41,7 @@ const yScale = d3.scaleLinear()
     .domain([0, config.days])
     .range([0, heatmapHeight]);
 
-const colorScale = d3.scaleSequential(d3.interpolateViridis)
+const colorScale = d3.scaleSequential(d3.interpolateInferno)
     .domain([0, 100]);
 
 // Function to format time for tooltip
