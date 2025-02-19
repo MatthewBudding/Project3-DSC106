@@ -380,7 +380,18 @@ Promise.all([
 // Event listeners
 document.getElementById("reset-filter").addEventListener("click", function() {
     updateHeatmaps(null);
+
+    // Reset brush selection to the full range
+    const legendScale = d3.scaleLinear()
+        .domain(colorScales[currentMetric].domain()) // Get min/max values
+        .range([800, 0]); // Match legend height
+
+    const defaultSelection = [legendScale.range()[1], legendScale.range()[0]]; // Full range
+
+    d3.select(".brush")
+        .call(d3.brushY().move, defaultSelection); // Reset brush
 });
+
 
 document.getElementById("metric-toggle").addEventListener("change", function(event) {
     switchMetric(event.target.value);
